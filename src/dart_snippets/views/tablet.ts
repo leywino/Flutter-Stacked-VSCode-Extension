@@ -2,28 +2,28 @@ import * as _ from 'lodash';
 import { Base } from '../architecture/base';
 
 export class Tablet extends Base {
-
   private _dartString: string;
 
   constructor(fileName: string, suffix: string) {
     super(fileName, suffix);
 
-    const classPrefixList: string[] = this.className.split('Tablet');
-    const classPrefix: string | undefined = classPrefixList.length > 0 ? classPrefixList[0] : undefined;
+    const originalClassName = this.className;
+    const classPrefix = originalClassName.replace('Tablet', '');
+    const modifiedClassName = `${classPrefix}ViewTablet`;
 
     this._dartString = `import 'package:flutter/material.dart';
 import 'package:stacked/stacked.dart';
 
 import '${fileName}_viewmodel.dart';
 
-class ${this.className} extends ViewModelWidget<${classPrefix}ViewModel> {
-  const ${this.className}({super.key});
+class ${modifiedClassName} extends ViewModelWidget<${classPrefix}ViewModel> {
+  const ${modifiedClassName}({super.key});
 
   @override
   Widget build(BuildContext context, ${classPrefix}ViewModel viewModel) {
     return const Scaffold(
       body: Center(
-        child: Text('${this.className}'),
+        child: Text('${modifiedClassName}'),
       ),
     );
   }

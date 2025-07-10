@@ -30,7 +30,7 @@ export class ViewModel extends Base {
   }
 
   private baseViewModelDartString(): string {
-    return `import 'package:logger/logger.dart';
+    return `import 'package:stacked/stacked.dart';
 
 class ${this.className} extends BaseViewModel {}
 `;
