@@ -52,35 +52,35 @@ class ${classPrefix}View extends StatelessWidget {
   }
 
   private responsiveDartString(fileName: string, classPrefix?: string): string {
-    return `library ${fileName}_view;
-
-import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
+    return `import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import '${fileName}_view_model.dart';
+import 'package:stacked/stacked.dart';
 
-part '${fileName}_mobile.dart';
-part '${fileName}_tablet.dart';
-part '${fileName}_desktop.dart';
+import '${fileName}_view.desktop.dart';
+import '${fileName}_view.tablet.dart';
+import '${fileName}_view.mobile.dart';
+import '${fileName}_viewmodel.dart';
 
-class ${this.className} extends StatelessWidget {
+class ${classPrefix}View extends StackedView<${classPrefix}ViewModel> {
+  const ${classPrefix}View({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    return ViewModelBuilder<${classPrefix}ViewModel>.reactive(
-      viewModelBuilder: () => ${classPrefix}ViewModel(),
-      onModelReady: (viewModel) {
-        // Do something once your viewModel is initialized
-      },
-      builder: (BuildContext context, ${classPrefix}ViewModel viewModel, Widget child) {
-        return ScreenTypeLayout(
-          mobile: _${classPrefix}Mobile(viewModel),
-          desktop: _${classPrefix}Desktop(viewModel),
-          tablet: _${classPrefix}Tablet(viewModel),  
-        );
-      }
+  Widget builder(
+    BuildContext context,
+    ${classPrefix}ViewModel viewModel,
+    Widget? child,
+  ) {
+    return ScreenTypeLayout.builder(
+      mobile: (_) => const ${classPrefix}ViewMobile(),
+      tablet: (_) => const ${classPrefix}ViewTablet(),
+      desktop: (_) => const ${classPrefix}ViewDesktop(),
     );
   }
+
+  @override
+  ${classPrefix}ViewModel viewModelBuilder(BuildContext context) => ${classPrefix}ViewModel();
 }
 `;
   }
+
 }

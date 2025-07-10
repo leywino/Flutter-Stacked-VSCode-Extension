@@ -18,29 +18,21 @@ export class ViewModel extends Base {
 
   private viewModelDartString(typeOfViewModel: TYPE_OF_VIEWMODEL, initialPath: string): string {
     switch (typeOfViewModel) {
-      case TYPE_OF_VIEWMODEL.BaseViewModel: return this.baseViewModelDartString(initialPath);
+      case TYPE_OF_VIEWMODEL.BaseViewModel: return this.baseViewModelDartString();
       case TYPE_OF_VIEWMODEL.FutureViewModel: return this.futureViewModelDartString(initialPath);
       case TYPE_OF_VIEWMODEL.StreamViewModel: return this.streamViewModelDartString(initialPath);
       case TYPE_OF_VIEWMODEL.MultipleFutureViewModel: return this.multipleFutureViewModelDartString(initialPath);
       case TYPE_OF_VIEWMODEL.MultipleStreamViewModel: return this.multipleStreamViewModelDartString(initialPath);
       case TYPE_OF_VIEWMODEL.ReactiveViewModel: return this.reactiveViewModelDartString(initialPath);
       case TYPE_OF_VIEWMODEL.IndexTrackingViewModel: return this.indexTrackingViewModelDartString(initialPath);
-      default: return this.baseViewModelDartString(initialPath);
+      default: return this.baseViewModelDartString();
     }
   }
 
-  private baseViewModelDartString(initialPath: string): string {
+  private baseViewModelDartString(): string {
     return `import 'package:logger/logger.dart';
-import 'package:stacked/stacked.dart';
-import '${initialPath}core/logger.dart';
 
-class ${this.className} extends BaseViewModel {
-  Logger log;
-
-  ${this.className}() {
-    this.log = getLogger(this.runtimeType.toString());
-  }
-}
+class ${this.className} extends BaseViewModel {}
 `;
   }
 

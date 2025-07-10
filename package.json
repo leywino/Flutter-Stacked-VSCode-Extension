@@ -55,25 +55,30 @@
     "commands": [
       {
         "command": "stackedExtension.createViews",
-        "title": "Create Views",
-        "category": "Stacked Architecture"
+        "title": "Stacked Architecture: Create Views"
       },
       {
         "command": "stackedExtension.regenerateRoutes",
-        "title": "Regenerate Routes",
-        "category": "Stacked Architecture"
+        "title": "Stacked Architecture: Regenerate Routes"
       },
       {
         "command": "stackedExtension.initializeArchitecture",
-        "title": "Initialize Architecture",
-        "category": "Stacked Architecture"
+        "title": "Stacked Architecture: Initialize Architecture"
       },
       {
         "command": "stackedExtension.createWidget",
-        "title": "Create Widgets",
-        "category": "Stacked Architecture"
+        "title": "Stacked Architecture: Create Widgets"
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "stackedExtension.createViews",
+          "when": "explorerResourceIsFolder",
+          "group": "z_stacked"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

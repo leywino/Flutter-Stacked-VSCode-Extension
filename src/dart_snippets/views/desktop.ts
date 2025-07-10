@@ -8,20 +8,20 @@ export class Desktop extends Base {
   constructor(fileName: string, suffix: string) {
     super(fileName, suffix);
 
-    let classPrefixList: string[] = this.className.split('Desktop');
-    let classPrefix: string | undefined;
-    if (!_.isEmpty(classPrefixList)) { classPrefix = _.first(classPrefixList); }
+    const classPrefixList: string[] = this.className.split('Desktop');
+    const classPrefix: string | undefined = classPrefixList.length > 0 ? classPrefixList[0] : undefined;
 
-    this._dartString = `part of ${fileName}_view;
+    this._dartString = `import 'package:flutter/material.dart';
+import 'package:stacked/stacked.dart';
 
-class _${this.className} extends StatelessWidget {
-  final ${classPrefix}ViewModel viewModel;
-  
-  _${this.className} (this.viewModel);
-  
+import '${fileName}_viewmodel.dart';
+
+class ${this.className} extends ViewModelWidget<${classPrefix}ViewModel> {
+  const ${this.className}({super.key});
+
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context, ${classPrefix}ViewModel viewModel) {
+    return const Scaffold(
       body: Center(
         child: Text('${this.className}'),
       ),

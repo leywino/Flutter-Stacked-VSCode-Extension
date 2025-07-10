@@ -86,52 +86,44 @@ export function activate(context: vscode.ExtensionContext) {
 		new ViewFile(rootPath, fileName, typeOfArchitecture, typeOfViewModel).createViews();
 	});
 
-	let viewDisposable = vscode.commands.registerCommand('stackedExtension.createViews', async () => {
+	let viewDisposable = vscode.commands.registerCommand('stackedExtension.createViews', async (uri?: vscode.Uri) => {
 		if (!FileSystemManager.isFlutterProject()) {
 			VsCodeActions.showErrorMessage('Missing pubspec');
 			return;
 		}
 
+		// Prompt for architecture type
 		let typeOfArchitecture = await inputTypeOfArchitecture();
 		if (typeOfArchitecture === undefined) {
 			return;
 		}
 
+		// Prompt for class name
 		let inputString = await VsCodeActions.getInputString('Enter Class Name', async (value) => {
-			if (value.length === 0) {
-				return 'Enter a Class Name';
-			}
-
-			if (value.toLowerCase() === 'view') {
-				return 'View is not a Valid Class Name';
-			}
-
+			if (value.length === 0) return 'Enter a Class Name';
+			if (value.toLowerCase() === 'view') return 'View is not a valid class name';
 			return undefined;
 		});
 
-		if (inputString.length === 0 || inputString.toLowerCase() === 'view') {
-			console.warn("activate: inputString length is 0");
+		if (!inputString || inputString.length === 0 || inputString.toLowerCase() === 'view') {
 			VsCodeActions.showErrorMessage("Invalid name for file");
 			return;
 		}
 
-		console.debug(`inputString: { ${inputString} }`);
-
-		let nameArray = inputString.trim().split('/');
+		const nameArray = inputString.trim().split('/');
 		let folders: string[] = [];
+
 		if (nameArray.length > 1) {
-			let folderList = nameArray.splice(0, nameArray.length - 1).map(element => { return element; });
-			console.debug(`folderlist: { ${folderList} }`);
-			folders = folderList;
+			folders = nameArray.slice(0, nameArray.length - 1);
 		}
 
-		let formattedInputString = _.last(nameArray);
-		if (formattedInputString === undefined) {
+		const formattedInputString = _.last(nameArray);
+		if (!formattedInputString) {
 			console.error('formattedInputString is undefined');
 			return;
 		}
-		let fileName = Utils.processFileName(formattedInputString);
-		console.debug(`activate: fileName: ${fileName}`);
+
+		const fileName = Utils.processFileName(formattedInputString);
 
 		let typeOfViewModel = await inputTypeOfViewModel();
 		if (typeOfViewModel === undefined) {
@@ -140,10 +132,16 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		let rootPath = VsCodeActions.rootPath;
-		if (rootPath === undefined) { return; }
+		let clickedPath = uri?.fsPath;
+		
+		if (!rootPath) {
+			VsCodeActions.showErrorMessage("Root path could not be determined");
+			return;
+		}
 
-		new ViewFile(rootPath, fileName, typeOfArchitecture, typeOfViewModel, folders).createViews();
+		new ViewFile(rootPath, fileName, typeOfArchitecture, typeOfViewModel, folders, clickedPath).createViews();
 	});
+
 
 	let widgetDisposable = vscode.commands.registerCommand('stackedExtension.createWidget', async () => {
 		if (!FileSystemManager.isFlutterProject()) {
